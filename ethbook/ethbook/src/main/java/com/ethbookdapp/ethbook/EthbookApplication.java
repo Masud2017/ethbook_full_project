@@ -1,4 +1,4 @@
-package com.ethereumdapp.ethbook;
+package com.ethbookdapp.ethbook;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
