@@ -1,0 +1,10 @@
+$primary_color : #71736A;
+$secondary_color: #F2F2F2;
+$tartiary_color : #A67E6F;
+
+@mixin header_theme($background,$color,$pad,$height) {
+    background-color: $background;
+    color : $color;
+    height: $height;
+    padding:$pad;
+}

@@ -1,0 +1,6 @@
+@import "important_properties";
+
+//For day (default) theme
+.nav {
+    @include header_theme($primary_color,white,1rem,2rem);
+}
