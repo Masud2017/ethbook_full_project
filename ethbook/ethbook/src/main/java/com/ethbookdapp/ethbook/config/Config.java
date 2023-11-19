@@ -4,7 +4,9 @@ import com.ethbookdapp.ethbook.filters.JWTRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -29,16 +30,13 @@ public class Config {
     private UserDetailsService userDetailsService;
     @Bean
     public SecurityFilterChain filterChain  (HttpSecurity http) throws Exception {
+        // there are some differences from the previous version of spring boot to this version (3.x)
         http.cors(cors-> cors.disable());
-
         http.authorizeHttpRequests(
                 req-> req
-                        .requestMatchers("/index","/users").permitAll()
+                        .requestMatchers("/index","/users","/auth","/register").permitAll()
                         .anyRequest().authenticated()
         );
-
-//        http.logout(logout -> logout.logoutSuccessUrl("/index"));
-//        http.formLogin(formLogin-> formLogin.loginPage("/login"));
 
         // update for spring boot 3
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint).accessDeniedPage("/error"));
@@ -56,5 +54,10 @@ public class Config {
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
 
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager getAuthenticationProvider (AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
